@@ -48,7 +48,8 @@ function LinkedList() {
       pointer = pointer.nextNode;
       currentIndex++;
     }
-    return pointer.value;
+    if (pointer) return pointer.value;
+    return null;
   };
 
   const pop = () => {
@@ -77,17 +78,16 @@ function LinkedList() {
   };
 
   const find = (value) => {
-    if (!head) return null;
-    if (head.value === value) return 0;
+    if (!head) return "Head is empty";
 
-    let currentIndex = 1;
+    let currentIndex = 0;
     let pointer = head;
     while (pointer) {
       if (pointer.value === value) return currentIndex;
       pointer = pointer.nextNode;
       currentIndex++;
     }
-    return null;
+    return "Not found";
   };
 
   const toString = () => {
@@ -96,13 +96,63 @@ function LinkedList() {
     if (!head) return "null";
 
     let pointer = head;
-    while (pointer.nextNode) {
+    while (pointer) {
       string = string.concat(`${pointer.value} -> `);
       pointer = pointer.nextNode;
     }
 
     let result = string.concat("null");
     return result;
+  };
+
+  const insertAt = (value, index) => {
+    let indexValue = at(index);
+
+    if (!head) return null;
+    if (index === 0) {
+      prepend(value);
+      return;
+    }
+
+    let cur = head;
+    let prev = null;
+
+    while (cur && cur.value !== indexValue) {
+      prev = cur;
+      cur = cur.nextNode;
+    }
+
+    if (cur) {
+      prev.nextNode = Node(value, cur);
+      _size++;
+    } else {
+      return null;
+    }
+  };
+
+  const removeAt = (index) => {
+    if (!head) return "head is empty";
+
+    if (index < 0 || index >= _size) return "Index out of bound";
+
+    if (index === 0) {
+      let temp = head;
+      head = head.nextNode;
+      temp.nextNode = null;
+      _size--;
+      return;
+    }
+
+    let currentNode = head;
+
+    for (let i = 0; i < index - 1; i++) {
+      currentNode = currentNode.nextNode;
+    }
+
+    const nodeToRemove = currentNode.nextNode;
+    currentNode.nextNode = nodeToRemove.nextNode;
+    nodeToRemove.nextNode = null;
+    _size--;
   };
 
   return {
@@ -116,6 +166,9 @@ function LinkedList() {
     contains,
     find,
     toString,
+    insertAt,
+    removeAt,
+    insertAt,
   };
 }
 
